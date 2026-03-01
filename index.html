@@ -1,0 +1,1682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DreamNova Command Center</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #050508;
+  --bg-card: #0D0D12;
+  --bg-card-hover: #111118;
+  --gold: #D4AF37;
+  --gold-dim: rgba(212, 175, 55, 0.15);
+  --gold-glow: rgba(212, 175, 55, 0.3);
+  --cyan: #00D4FF;
+  --cyan-dim: rgba(0, 212, 255, 0.12);
+  --green: #00E676;
+  --red: #FF3D3D;
+  --blue: #448AFF;
+  --orange: #FF9100;
+  --purple: #B388FF;
+  --text: #E8E6E3;
+  --text-dim: #6B6B7B;
+  --text-mid: #9B9BAB;
+  --border: rgba(255,255,255,0.06);
+  --border-gold: rgba(212, 175, 55, 0.2);
+  --radius: 12px;
+  --radius-lg: 16px;
+  --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* === BACKGROUND GRADIENT MESH === */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 20% 0%, rgba(212, 175, 55, 0.04) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 100%, rgba(0, 212, 255, 0.03) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 30% at 50% 50%, rgba(212, 175, 55, 0.02) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* === SCROLLBAR === */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--gold); }
+
+/* === LAYOUT === */
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 24px;
+  position: relative;
+  z-index: 1;
+}
+
+/* === HEADER === */
+.header {
+  padding: 32px 0 24px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 32px;
+}
+
+.header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.logo-group {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.logo-icon {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, var(--gold), #F5D678);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 900;
+  color: var(--bg);
+  box-shadow: 0 0 30px rgba(212, 175, 55, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.logo-icon::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 30%, rgba(255,255,255,0.4) 50%, transparent 70%);
+  animation: logoShimmer 3s ease-in-out infinite;
+}
+
+@keyframes logoShimmer {
+  0%, 100% { transform: translateX(-100%); }
+  50% { transform: translateX(100%); }
+}
+
+.title-group h1 {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  background: linear-gradient(135deg, var(--gold), #F5D678, var(--gold));
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 4s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.title-group .subtitle {
+  font-size: 13px;
+  color: var(--text-dim);
+  font-weight: 400;
+  margin-top: 2px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+/* === SEARCH === */
+.search-wrapper {
+  position: relative;
+  width: 320px;
+}
+
+.search-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-dim);
+  width: 16px;
+  height: 16px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 10px 16px 10px 40px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 14px;
+  transition: var(--transition);
+  outline: none;
+}
+
+.search-input::placeholder { color: var(--text-dim); }
+.search-input:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px var(--gold-dim);
+}
+
+/* === FILTER BUTTONS === */
+.filters {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  padding: 7px 16px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-dim);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+  white-space: nowrap;
+}
+
+.filter-btn:hover {
+  border-color: var(--gold-dim);
+  color: var(--text);
+  background: rgba(212, 175, 55, 0.05);
+}
+
+.filter-btn.active {
+  background: var(--gold);
+  color: var(--bg);
+  border-color: var(--gold);
+  font-weight: 600;
+}
+
+/* === STATS BAR === */
+.stats-bar {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 16px;
+  margin-bottom: 40px;
+}
+
+.stat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  text-align: center;
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  opacity: 0;
+  transition: var(--transition);
+}
+
+.stat-card:hover::before { opacity: 1; }
+.stat-card:hover {
+  border-color: var(--border-gold);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+}
+
+.stat-number {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--gold);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 500;
+}
+
+/* === SECTION === */
+.section {
+  margin-bottom: 48px;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.section-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+.section-icon.gold { background: var(--gold-dim); }
+.section-icon.cyan { background: var(--cyan-dim); }
+.section-icon.green { background: rgba(0, 230, 118, 0.12); }
+.section-icon.orange { background: rgba(255, 145, 0, 0.12); }
+.section-icon.purple { background: rgba(179, 136, 255, 0.12); }
+.section-icon.blue { background: rgba(68, 138, 255, 0.12); }
+
+.section-title {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+
+.section-count {
+  font-size: 12px;
+  color: var(--text-dim);
+  background: var(--bg-card);
+  padding: 3px 10px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  font-weight: 500;
+}
+
+/* === CARD GRID === */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.card-grid.compact {
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+}
+
+/* === CARD === */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius);
+  border: 1px solid transparent;
+  transition: var(--transition);
+  pointer-events: none;
+}
+
+.card:hover {
+  border-color: var(--border-gold);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.4), 0 0 60px rgba(212, 175, 55, 0.04);
+}
+
+.card:hover::after {
+  border-color: var(--border-gold);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.card-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.card-subtitle {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-top: 4px;
+}
+
+.card-url {
+  display: block;
+  font-size: 12px;
+  color: var(--cyan);
+  text-decoration: none;
+  margin-top: 8px;
+  word-break: break-all;
+  transition: var(--transition);
+  opacity: 0.8;
+}
+
+.card-url:hover { opacity: 1; text-decoration: underline; }
+
+/* === STATUS DOT === */
+.status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  position: relative;
+}
+
+.status-dot::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  border: 1px solid currentColor;
+  opacity: 0.3;
+}
+
+.status.up .status-dot { background: var(--green); color: var(--green); }
+.status.up { color: var(--green); }
+.status.down .status-dot { background: var(--red); color: var(--red); }
+.status.down { color: var(--red); }
+.status.active .status-dot {
+  background: var(--blue);
+  color: var(--blue);
+  animation: pulse 2s ease-in-out infinite;
+}
+.status.active { color: var(--blue); }
+
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(68, 138, 255, 0.4); }
+  50% { box-shadow: 0 0 0 6px rgba(68, 138, 255, 0); }
+}
+
+.status.live .status-dot { background: var(--green); color: var(--green); animation: pulse-green 2s ease-in-out infinite; }
+.status.live { color: var(--green); }
+
+@keyframes pulse-green {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(0, 230, 118, 0.4); }
+  50% { box-shadow: 0 0 0 6px rgba(0, 230, 118, 0); }
+}
+
+/* === TAGS === */
+.tag {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+.tag.gold { background: var(--gold-dim); color: var(--gold); }
+.tag.cyan { background: var(--cyan-dim); color: var(--cyan); }
+.tag.green { background: rgba(0,230,118,0.12); color: var(--green); }
+.tag.orange { background: rgba(255,145,0,0.12); color: var(--orange); }
+.tag.purple { background: rgba(179,136,255,0.12); color: var(--purple); }
+.tag.blue { background: rgba(68,138,255,0.12); color: var(--blue); }
+
+/* === PORT BADGE === */
+.port-badge {
+  font-size: 11px;
+  color: var(--text-dim);
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  background: rgba(255,255,255,0.04);
+  padding: 2px 8px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+}
+
+/* === REVENUE SECTION === */
+.revenue-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.revenue-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  transition: var(--transition);
+}
+
+.revenue-row:hover {
+  border-color: var(--border-gold);
+  transform: translateX(4px);
+}
+
+.revenue-row.total {
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.08), rgba(0, 212, 255, 0.04));
+  border-color: var(--gold);
+}
+
+.revenue-priority {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--bg);
+  background: var(--gold);
+  flex-shrink: 0;
+}
+
+.revenue-row.total .revenue-priority {
+  background: linear-gradient(135deg, var(--gold), var(--cyan));
+  width: 32px;
+  height: 32px;
+}
+
+.revenue-action {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.revenue-bar-wrapper {
+  flex: 0 0 200px;
+  height: 8px;
+  background: rgba(255,255,255,0.04);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.revenue-bar {
+  height: 100%;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--gold), var(--cyan));
+  transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.revenue-amount {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--gold);
+  white-space: nowrap;
+  min-width: 90px;
+  text-align: right;
+}
+
+.revenue-row.total .revenue-amount {
+  font-size: 20px;
+  background: linear-gradient(135deg, var(--gold), var(--cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* === TIMELINE === */
+.timeline {
+  position: relative;
+  padding-left: 32px;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 7px;
+  top: 8px;
+  bottom: 8px;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--gold), var(--cyan));
+  border-radius: 1px;
+}
+
+.timeline-item {
+  position: relative;
+  padding: 12px 0 24px;
+}
+
+.timeline-item:last-child { padding-bottom: 0; }
+
+.timeline-dot {
+  position: absolute;
+  left: -29px;
+  top: 16px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 3px solid var(--gold);
+  z-index: 1;
+}
+
+.timeline-item.urgent .timeline-dot {
+  border-color: var(--red);
+  box-shadow: 0 0 12px rgba(255, 61, 61, 0.3);
+}
+
+.timeline-item.soon .timeline-dot {
+  border-color: var(--orange);
+}
+
+.timeline-date {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--gold);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+
+.timeline-item.urgent .timeline-date { color: var(--red); }
+.timeline-item.soon .timeline-date { color: var(--orange); }
+
+.timeline-desc {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.timeline-meta {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-top: 4px;
+}
+
+/* === RESEARCH CARD === */
+.research-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  transition: var(--transition);
+}
+
+.research-card:hover {
+  border-color: var(--border-gold);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+}
+
+.research-stat {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--cyan);
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  margin-bottom: 8px;
+}
+
+.research-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.research-detail {
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+/* === INFRASTRUCTURE === */
+.infra-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.infra-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  text-align: center;
+  transition: var(--transition);
+}
+
+.infra-card:hover {
+  border-color: var(--border-gold);
+  transform: translateY(-2px);
+}
+
+.infra-value {
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+
+.infra-value.green { color: var(--green); }
+.infra-value.gold { color: var(--gold); }
+.infra-value.cyan { color: var(--cyan); }
+
+.infra-label {
+  font-size: 12px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.infra-sub {
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+.progress-bar {
+  height: 6px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-top: 10px;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.progress-fill.green { background: linear-gradient(90deg, var(--green), #69F0AE); }
+.progress-fill.gold { background: linear-gradient(90deg, var(--gold), #F5D678); }
+.progress-fill.cyan { background: linear-gradient(90deg, var(--cyan), #80E8FF); }
+
+/* === FOOTER === */
+.footer {
+  border-top: 1px solid var(--border);
+  padding: 40px 0;
+  text-align: center;
+  margin-top: 40px;
+}
+
+.footer-mantra {
+  font-size: 20px;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--gold), var(--cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 8px;
+  letter-spacing: 1px;
+}
+
+.footer-mission {
+  font-size: 14px;
+  color: var(--text-dim);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.footer-copy {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-top: 16px;
+  opacity: 0.5;
+}
+
+/* === SECTION VISIBILITY === */
+.section[data-category] { display: block; }
+.section.hidden { display: none; }
+.card.hidden { display: none; }
+
+/* === NO RESULTS === */
+.no-results {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-dim);
+  font-size: 15px;
+  display: none;
+}
+
+.no-results.visible { display: block; }
+
+/* === RESPONSIVE === */
+@media (max-width: 1024px) {
+  .stats-bar { grid-template-columns: repeat(3, 1fr); }
+  .revenue-bar-wrapper { flex: 0 0 120px; }
+}
+
+@media (max-width: 768px) {
+  .header-top { flex-direction: column; align-items: flex-start; }
+  .search-wrapper { width: 100%; }
+  .stats-bar { grid-template-columns: repeat(2, 1fr); }
+  .stat-number { font-size: 24px; }
+  .card-grid { grid-template-columns: 1fr; }
+  .revenue-row { flex-wrap: wrap; }
+  .revenue-bar-wrapper { flex: 1 0 100%; order: 4; }
+  .revenue-amount { min-width: auto; }
+  .infra-grid { grid-template-columns: repeat(2, 1fr); }
+  .container { padding: 0 16px; }
+}
+
+@media (max-width: 480px) {
+  .stats-bar { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .stat-card { padding: 14px; }
+  .stat-number { font-size: 22px; }
+  .filters { overflow-x: auto; flex-wrap: nowrap; padding-bottom: 8px; }
+  .title-group h1 { font-size: 22px; }
+}
+
+/* === ANIMATE IN === */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-in {
+  animation: fadeInUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  opacity: 0;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-top">
+      <div class="logo-group">
+        <div class="logo-icon">N</div>
+        <div class="title-group">
+          <h1>DreamNova Command Center</h1>
+          <div class="subtitle">Mission Control &mdash; $63M Hafatsa</div>
+        </div>
+      </div>
+      <div class="search-wrapper">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" class="search-input" id="searchInput" placeholder="Search sites, agents, clients...">
+      </div>
+    </div>
+    <div class="filters" id="filterBar">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="sites">Sites</button>
+      <button class="filter-btn" data-filter="agents">Agents</button>
+      <button class="filter-btn" data-filter="clients">Clients</button>
+      <button class="filter-btn" data-filter="revenue">Revenue</button>
+      <button class="filter-btn" data-filter="deadlines">Deadlines</button>
+      <button class="filter-btn" data-filter="research">Research</button>
+      <button class="filter-btn" data-filter="infra">Infrastructure</button>
+      <a href="dcs.html" class="filter-btn" style="background:linear-gradient(135deg,var(--gold-dim),var(--cyan-dim));border-color:var(--gold);text-decoration:none">DCS 72.5</a>
+    </div>
+  </header>
+
+  <!-- STATS BAR -->
+  <div class="stats-bar" id="statsBar">
+    <div class="stat-card animate-in" style="animation-delay: 0.05s">
+      <div class="stat-number">143</div>
+      <div class="stat-label">GitHub Repos</div>
+    </div>
+    <div class="stat-card animate-in" style="animation-delay: 0.1s">
+      <div class="stat-number">100</div>
+      <div class="stat-label">Vercel Projects</div>
+    </div>
+    <div class="stat-card animate-in" style="animation-delay: 0.15s">
+      <div class="stat-number">11</div>
+      <div class="stat-label">Live Sites</div>
+    </div>
+    <div class="stat-card animate-in" style="animation-delay: 0.2s">
+      <div class="stat-number">8</div>
+      <div class="stat-label">AI Agents</div>
+    </div>
+    <div class="stat-card animate-in" style="animation-delay: 0.25s">
+      <div class="stat-number">6</div>
+      <div class="stat-label">Active Clients</div>
+    </div>
+    <div class="stat-card animate-in" style="animation-delay: 0.3s">
+      <div class="stat-number" style="font-size: 26px;">$4,015</div>
+      <div class="stat-label">Revenue Target/mo</div>
+    </div>
+  </div>
+
+  <!-- SECTION: LIVE SITES -->
+  <section class="section animate-in" data-category="sites" style="animation-delay: 0.35s">
+    <div class="section-header">
+      <div class="section-icon gold">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+      </div>
+      <h2 class="section-title">Live Sites</h2>
+      <span class="section-count">11 sites</span>
+    </div>
+    <div class="card-grid" id="sitesGrid">
+
+      <div class="card" data-search="dreamnova landing main nfc sacred">
+        <div class="card-header">
+          <div>
+            <div class="card-title">DreamNova Landing</div>
+            <div class="card-subtitle">Sacred NFC Platform &mdash; Main Site</div>
+          </div>
+          <div class="status up"><span class="status-dot"></span>UP</div>
+        </div>
+        <span class="tag gold">NFC</span>
+        <a class="card-url" href="https://dreamnova.vercel.app" target="_blank" rel="noopener">dreamnova.vercel.app</a>
+      </div>
+
+      <div class="card" data-search="keren haesh sheli books breslev yaakov">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Keren HaEsh Sheli</div>
+            <div class="card-subtitle">Breslev Book Store &mdash; Yaakov Renne</div>
+          </div>
+          <div class="status up"><span class="status-dot"></span>UP</div>
+        </div>
+        <span class="tag green">E-Commerce</span>
+        <a class="card-url" href="https://haesh-sheli-new.vercel.app" target="_blank" rel="noopener">haesh-sheli-new.vercel.app</a>
+      </div>
+
+      <div class="card" data-search="esther ifrah breslev content">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Esther Ifrah</div>
+            <div class="card-subtitle">Breslev Content Platform</div>
+          </div>
+          <div class="status up"><span class="status-dot"></span>UP</div>
+        </div>
+        <span class="tag purple">Content</span>
+        <a class="card-url" href="https://ultime-esther-ifra-breslev.vercel.app" target="_blank" rel="noopener">ultime-esther-ifra-breslev.vercel.app</a>
+      </div>
+
+      <div class="card" data-search="baroukh sagit jewelry bijoux luxury">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Baroukh Sagit</div>
+            <div class="card-subtitle">Luxury Jewelry &mdash; 341 Products</div>
+          </div>
+          <div class="status up"><span class="status-dot"></span>UP</div>
+        </div>
+        <span class="tag gold">Luxury</span>
+        <a class="card-url" href="https://barukh-sagit-jewelry.vercel.app" target="_blank" rel="noopener">barukh-sagit-jewelry.vercel.app</a>
+      </div>
+
+      <div class="card" data-search="dreamnova consult consulting">
+        <div class="card-header">
+          <div>
+            <div class="card-title">DreamNova Consult</div>
+            <div class="card-subtitle">AI Consulting Services</div>
+          </div>
+          <div class="status up"><span class="status-dot"></span>UP</div>
+        </div>
+        <span class="tag cyan">SaaS</span>
+        <a class="card-url" href="https://dreamnova-consult.vercel.app" target="_blank" rel="noopener">dreamnova-consult.vercel.app</a>
+      </div>
+
+      <div class="card" data-search="nachman science entropy research">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Nachman Science</div>
+            <div class="card-subtitle">Shannon Entropy Research Platform</div>
+          </div>
+          <div class="status up"><span class="status-dot"></span>UP</div>
+        </div>
+        <span class="tag blue">Research</span>
+        <a class="card-url" href="https://nachman-science.vercel.app" target="_blank" rel="noopener">nachman-science.vercel.app</a>
+      </div>
+
+      <div class="card" data-search="dreamnova portfolio showcase">
+        <div class="card-header">
+          <div>
+            <div class="card-title">DreamNova Portfolio</div>
+            <div class="card-subtitle">Project Showcase</div>
+          </div>
+          <div class="status up"><span class="status-dot"></span>UP</div>
+        </div>
+        <span class="tag gold">Portfolio</span>
+        <a class="card-url" href="https://dreamnova-portfolio.vercel.app" target="_blank" rel="noopener">dreamnova-portfolio.vercel.app</a>
+      </div>
+
+      <div class="card" data-search="dreamnova formation training ia ai">
+        <div class="card-header">
+          <div>
+            <div class="card-title">DreamNova Formation</div>
+            <div class="card-subtitle">AI Training Platform</div>
+          </div>
+          <div class="status up"><span class="status-dot"></span>UP</div>
+        </div>
+        <span class="tag cyan">Education</span>
+        <a class="card-url" href="https://dreamnova-formation-ia.vercel.app" target="_blank" rel="noopener">dreamnova-formation-ia.vercel.app</a>
+      </div>
+
+      <div class="card" data-search="project map carte projects vercel">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Project Map</div>
+            <div class="card-subtitle">84 Vercel Projects Explorer</div>
+          </div>
+          <div class="status up"><span class="status-dot"></span>UP</div>
+        </div>
+        <span class="tag orange">Tool</span>
+        <a class="card-url" href="https://dreamnova-project-map.vercel.app" target="_blank" rel="noopener">dreamnova-project-map.vercel.app</a>
+      </div>
+
+      <div class="card" data-search="status hub ecosystem monitoring">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Status Hub</div>
+            <div class="card-subtitle">Ecosystem Health Monitor</div>
+          </div>
+          <div class="status up"><span class="status-dot"></span>UP</div>
+        </div>
+        <span class="tag orange">Tool</span>
+        <a class="card-url" href="https://dreamnova-status-hub.vercel.app" target="_blank" rel="noopener">dreamnova-status-hub.vercel.app</a>
+      </div>
+
+      <div class="card" data-search="ariel solar panels lead gen kavkom">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Ariel Solar</div>
+            <div class="card-subtitle">Solar Panel Lead Generation</div>
+          </div>
+          <div class="status up"><span class="status-dot"></span>UP</div>
+        </div>
+        <span class="tag green">Lead Gen</span>
+        <a class="card-url" href="https://ariel-solar-panels-kavkom.vercel.app" target="_blank" rel="noopener">ariel-solar-panels-kavkom.vercel.app</a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SECTION: AI AGENTS -->
+  <section class="section animate-in" data-category="agents" style="animation-delay: 0.4s">
+    <div class="section-header">
+      <div class="section-icon cyan">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00D4FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      </div>
+      <h2 class="section-title">AI Agents</h2>
+      <span class="section-count">8 agents</span>
+    </div>
+    <div class="card-grid compact" id="agentsGrid">
+
+      <div class="card" data-search="claude code opus ai llm anthropic">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Claude Code Opus 4.6</div>
+            <div class="card-subtitle">Primary AI Agent &mdash; Anthropic</div>
+          </div>
+          <div class="status active"><span class="status-dot"></span>ACTIVE</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:8px;">
+          <span class="tag blue">LLM</span>
+          <span class="tag purple">Primary</span>
+        </div>
+      </div>
+
+      <div class="card" data-search="openclaw browser relay automation">
+        <div class="card-header">
+          <div>
+            <div class="card-title">OpenClaw</div>
+            <div class="card-subtitle">Browser Automation Engine</div>
+          </div>
+          <div class="status up"><span class="status-dot"></span>UP</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:8px;">
+          <span class="port-badge">:18789</span>
+          <span class="tag cyan">Automation</span>
+        </div>
+      </div>
+
+      <div class="card" data-search="openclaw browser chrome relay extension">
+        <div class="card-header">
+          <div>
+            <div class="card-title">OpenClaw Browser</div>
+            <div class="card-subtitle">Chrome Beta Relay &mdash; Profile 2</div>
+          </div>
+          <div class="status up"><span class="status-dot"></span>UP</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:8px;">
+          <span class="port-badge">:18792</span>
+          <span class="tag cyan">Browser</span>
+        </div>
+      </div>
+
+      <div class="card" data-search="memubot memory context management">
+        <div class="card-header">
+          <div>
+            <div class="card-title">MemuBot</div>
+            <div class="card-subtitle">Memory &amp; Context Manager</div>
+          </div>
+          <div class="status up"><span class="status-dot"></span>UP</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:8px;">
+          <span class="port-badge">:18790</span>
+          <span class="tag purple">Memory</span>
+        </div>
+      </div>
+
+      <div class="card" data-search="agent zero autonomous">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Agent Zero</div>
+            <div class="card-subtitle">Autonomous Agent Framework</div>
+          </div>
+          <div class="status down"><span class="status-dot"></span>DOWN</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:8px;">
+          <span class="port-badge">:50001</span>
+          <span class="tag orange">Autonomous</span>
+        </div>
+      </div>
+
+      <div class="card" data-search="antigravity task management coordination">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Antigravity</div>
+            <div class="card-subtitle">Task Orchestration Agent</div>
+          </div>
+          <div class="status up"><span class="status-dot"></span>UP</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:8px;">
+          <span class="port-badge">:62396</span>
+          <span class="tag green">Orchestration</span>
+        </div>
+      </div>
+
+      <div class="card" data-search="ollama local llm model inference">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Ollama</div>
+            <div class="card-subtitle">Local LLM Inference Server</div>
+          </div>
+          <div class="status up"><span class="status-dot"></span>UP</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:8px;">
+          <span class="port-badge">:11434</span>
+          <span class="tag blue">Local LLM</span>
+        </div>
+      </div>
+
+      <div class="card" data-search="zeroclaw hybrid agent integration">
+        <div class="card-header">
+          <div>
+            <div class="card-title">ZeroClaw</div>
+            <div class="card-subtitle">Hybrid Agent Bridge</div>
+          </div>
+          <div class="status up"><span class="status-dot"></span>UP</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:8px;">
+          <span class="port-badge">:42617</span>
+          <span class="tag cyan">Hybrid</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SECTION: CLIENTS -->
+  <section class="section animate-in" data-category="clients" style="animation-delay: 0.45s">
+    <div class="section-header">
+      <div class="section-icon green">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00E676" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </div>
+      <h2 class="section-title">Clients</h2>
+      <span class="section-count">6 clients</span>
+    </div>
+    <div class="card-grid compact" id="clientsGrid">
+
+      <div class="card" data-search="yaakov renne keren breslev books 100%">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Yaakov Renne</div>
+            <div class="card-subtitle">Keren Rabbi Yisrael &mdash; Book Store</div>
+          </div>
+          <div class="status live"><span class="status-dot"></span>LIVE</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:8px;">
+          <span class="tag green">100%</span>
+          <span class="tag gold">E-Commerce</span>
+        </div>
+        <a class="card-url" href="https://haesh-sheli-new.vercel.app" target="_blank" rel="noopener">haesh-sheli-new.vercel.app</a>
+      </div>
+
+      <div class="card" data-search="esther ifrah breslev content live">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Esther Ifrah</div>
+            <div class="card-subtitle">Breslev Content Platform</div>
+          </div>
+          <div class="status live"><span class="status-dot"></span>LIVE</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:8px;">
+          <span class="tag green">Live</span>
+          <span class="tag purple">Content</span>
+        </div>
+        <a class="card-url" href="https://ultime-esther-ifra-breslev.vercel.app" target="_blank" rel="noopener">ultime-esther-ifra-breslev.vercel.app</a>
+      </div>
+
+      <div class="card" data-search="ariel ti48 solar panels satisfait">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Ariel TI48</div>
+            <div class="card-subtitle">Solar Panels + Kavkom Telephony</div>
+          </div>
+          <div class="status up"><span class="status-dot"></span>SATISFAIT</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:8px;">
+          <span class="tag green">Satisfait</span>
+          <span class="tag orange">Lead Gen</span>
+        </div>
+        <a class="card-url" href="https://ariel-solar-panels-kavkom.vercel.app" target="_blank" rel="noopener">ariel-solar-panels-kavkom.vercel.app</a>
+      </div>
+
+      <div class="card" data-search="ran badran habedartan en cours">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Ran Badran</div>
+            <div class="card-subtitle">Ha-Bedartan Project</div>
+          </div>
+          <div class="status active"><span class="status-dot"></span>EN COURS</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:8px;">
+          <span class="tag blue">En cours</span>
+        </div>
+      </div>
+
+      <div class="card" data-search="moshe myara ha-mazon actif food">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Moshe Myara</div>
+            <div class="card-subtitle">Ha-Mazon Platform</div>
+          </div>
+          <div class="status active"><span class="status-dot"></span>ACTIF</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:8px;">
+          <span class="tag blue">Actif</span>
+        </div>
+      </div>
+
+      <div class="card" data-search="tikoun aolam tikkun olam nouveau new">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Tikoun Aolam</div>
+            <div class="card-subtitle">New Client &mdash; Onboarding</div>
+          </div>
+          <div class="status active"><span class="status-dot"></span>NOUVEAU</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:8px;">
+          <span class="tag cyan">Nouveau</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SECTION: REVENUE PIPELINE -->
+  <section class="section animate-in" data-category="revenue" style="animation-delay: 0.5s">
+    <div class="section-header">
+      <div class="section-icon gold">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      </div>
+      <h2 class="section-title">Revenue Pipeline</h2>
+      <span class="section-count">$4,015/mo target</span>
+    </div>
+    <div class="revenue-grid" id="revenueGrid">
+
+      <div class="revenue-row" data-search="maintenance plans clients revenue">
+        <div class="revenue-priority">1</div>
+        <div class="revenue-action">Maintenance plans &mdash; 5 clients x $149/mo</div>
+        <div class="revenue-bar-wrapper">
+          <div class="revenue-bar" style="width: 18.5%"></div>
+        </div>
+        <div class="revenue-amount">$745</div>
+      </div>
+
+      <div class="revenue-row" data-search="breslov rag saas subscription">
+        <div class="revenue-priority">2</div>
+        <div class="revenue-action">Breslov RAG SaaS &mdash; $49/mo x 10 users</div>
+        <div class="revenue-bar-wrapper">
+          <div class="revenue-bar" style="width: 12.2%"></div>
+        </div>
+        <div class="revenue-amount">$490</div>
+      </div>
+
+      <div class="revenue-row" data-search="template baroukh gumroad marketplace">
+        <div class="revenue-priority">3</div>
+        <div class="revenue-action">Baroukh Template &mdash; Gumroad $199/sale</div>
+        <div class="revenue-bar-wrapper">
+          <div class="revenue-bar" style="width: 10%"></div>
+        </div>
+        <div class="revenue-amount">$400</div>
+      </div>
+
+      <div class="revenue-row" data-search="lead gen dreamnova consult consulting">
+        <div class="revenue-priority">4</div>
+        <div class="revenue-action">Lead Gen &mdash; DreamNova Consult Inbound</div>
+        <div class="revenue-bar-wrapper">
+          <div class="revenue-bar" style="width: 49.8%"></div>
+        </div>
+        <div class="revenue-amount">$2,000</div>
+      </div>
+
+      <div class="revenue-row" data-search="micro saas subscription users">
+        <div class="revenue-priority">5</div>
+        <div class="revenue-action">Micro-SaaS #03 &mdash; $19/mo x 20 users</div>
+        <div class="revenue-bar-wrapper">
+          <div class="revenue-bar" style="width: 9.5%"></div>
+        </div>
+        <div class="revenue-amount">$380</div>
+      </div>
+
+      <div class="revenue-row total" data-search="total revenue target monthly">
+        <div class="revenue-priority" style="font-size: 10px;">SUM</div>
+        <div class="revenue-action" style="font-weight: 700; font-size: 16px;">Monthly Revenue Target</div>
+        <div class="revenue-bar-wrapper">
+          <div class="revenue-bar" style="width: 100%"></div>
+        </div>
+        <div class="revenue-amount">$4,015/mo</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SECTION: DEADLINES -->
+  <section class="section animate-in" data-category="deadlines" style="animation-delay: 0.55s">
+    <div class="section-header">
+      <div class="section-icon orange">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FF9100" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      </div>
+      <h2 class="section-title">Deadlines</h2>
+      <span class="section-count">4 upcoming</span>
+    </div>
+    <div class="timeline" id="deadlinesGrid" data-search="deadlines dates timeline calendar">
+
+      <div class="timeline-item urgent" data-search="dh sheffield abstract march 2">
+        <div class="timeline-dot"></div>
+        <div class="timeline-date">2 March 2026</div>
+        <div class="timeline-desc">DH Sheffield Abstract Submission</div>
+        <div class="timeline-meta">Digital Humanities Conference &mdash; URGENT</div>
+      </div>
+
+      <div class="timeline-item soon" data-search="isf grant march 9 funding">
+        <div class="timeline-dot"></div>
+        <div class="timeline-date">9 March 2026</div>
+        <div class="timeline-desc">ISF Grant Application</div>
+        <div class="timeline-meta">Israel Science Foundation &mdash; Research Funding</div>
+      </div>
+
+      <div class="timeline-item soon" data-search="eajs deadline march 26 conference">
+        <div class="timeline-dot"></div>
+        <div class="timeline-date">26 March 2026</div>
+        <div class="timeline-desc">EAJS Deadline</div>
+        <div class="timeline-meta">European Association for Jewish Studies</div>
+      </div>
+
+      <div class="timeline-item" data-search="eu ai act enforcement august regulation">
+        <div class="timeline-dot"></div>
+        <div class="timeline-date">2 August 2026</div>
+        <div class="timeline-desc">EU AI Act Enforcement</div>
+        <div class="timeline-meta">Full enforcement of EU AI regulation framework</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SECTION: RESEARCH -->
+  <section class="section animate-in" data-category="research" style="animation-delay: 0.6s">
+    <div class="section-header">
+      <div class="section-icon purple">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B388FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+      </div>
+      <h2 class="section-title">Research</h2>
+      <span class="section-count">5 tracks</span>
+    </div>
+    <div class="card-grid compact" id="researchGrid">
+
+      <div class="research-card" data-search="nachman science shannon entropy bits information">
+        <div class="research-stat">H(F)=1.846</div>
+        <div class="research-label">Nachman Science</div>
+        <div class="research-detail">Shannon entropy bits &mdash; Information-theoretic analysis of sacred texts</div>
+      </div>
+
+      <div class="research-card" data-search="dna architecture pytorch asl prototype deep learning">
+        <div class="research-stat">PyTorch</div>
+        <div class="research-label">DNA Architecture</div>
+        <div class="research-detail">ASL Prototype &mdash; Deep learning model for DNA sequence analysis</div>
+      </div>
+
+      <div class="research-card" data-search="source code reality paper academic pages references">
+        <div class="research-stat">21 pages</div>
+        <div class="research-label">"Source Code of Reality"</div>
+        <div class="research-detail">Academic paper &mdash; 185 references &mdash; Sacred computation theory</div>
+      </div>
+
+      <div class="research-card" data-search="billion dollar strategy engines nfc saas patents dreamos">
+        <div class="research-stat">$1B</div>
+        <div class="research-label">$1B Strategy</div>
+        <div class="research-detail">5 engines: NFC + SaaS + Patents + DreamOS + Research</div>
+      </div>
+
+      <a href="dcs.html" class="research-card" data-search="dcs score david exceptional creative assessment" style="text-decoration:none;color:inherit;cursor:pointer;border:1px solid var(--gold-dim)">
+        <div class="research-stat" style="background:linear-gradient(135deg,var(--gold),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent">72.5/100</div>
+        <div class="research-label">DCS Score &rarr;</div>
+        <div class="research-detail">David Amor &mdash; EXCEPTIONAL &mdash; Click for radar chart &amp; 90-day plan</div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- SECTION: INFRASTRUCTURE -->
+  <section class="section animate-in" data-category="infra" style="animation-delay: 0.65s">
+    <div class="section-header">
+      <div class="section-icon blue">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#448AFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
+      </div>
+      <h2 class="section-title">Infrastructure</h2>
+      <span class="section-count">System Health</span>
+    </div>
+    <div class="infra-grid" id="infraGrid">
+
+      <div class="infra-card" data-search="disk space storage gb free">
+        <div class="infra-value green">177 GB</div>
+        <div class="infra-label">Disk Free</div>
+        <div class="infra-sub">of 926 GB total</div>
+        <div class="progress-bar">
+          <div class="progress-fill green" style="width: 80.8%"></div>
+        </div>
+      </div>
+
+      <div class="infra-card" data-search="ram memory active usage">
+        <div class="infra-value cyan">64 GB</div>
+        <div class="infra-label">RAM Total</div>
+        <div class="infra-sub">34 GB active</div>
+        <div class="progress-bar">
+          <div class="progress-fill cyan" style="width: 53.1%"></div>
+        </div>
+      </div>
+
+      <div class="infra-card" data-search="systems uptime health status">
+        <div class="infra-value green">8/10</div>
+        <div class="infra-label">Systems UP</div>
+        <div class="infra-sub">2 down or paused</div>
+        <div class="progress-bar">
+          <div class="progress-fill green" style="width: 80%"></div>
+        </div>
+      </div>
+
+      <div class="infra-card" data-search="github repos repositories active stale">
+        <div class="infra-value gold">143</div>
+        <div class="infra-label">GitHub Repos</div>
+        <div class="infra-sub">24 active &middot; 38 recent &middot; 81 stale</div>
+        <div class="progress-bar">
+          <div class="progress-fill gold" style="width: 16.8%"></div>
+        </div>
+      </div>
+
+      <div class="infra-card" data-search="vercel projects linked orphans deployment">
+        <div class="infra-value gold">100</div>
+        <div class="infra-label">Vercel Projects</div>
+        <div class="infra-sub">40 linked &middot; 60 orphans</div>
+        <div class="progress-bar">
+          <div class="progress-fill gold" style="width: 40%"></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- NO RESULTS -->
+  <div class="no-results" id="noResults">
+    No results found. Try a different search term.
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-mantra">Na Nach Nachma Nachman MeUman</div>
+    <div class="footer-mission">$63M Hafatsa &mdash; Ein Ye'ush Ba'olam Klal</div>
+    <div class="footer-copy">DreamNova Command Center &copy; 2026 &mdash; David Amor &mdash; Jerusalem</div>
+  </footer>
+
+</div>
+
+<script>
+(function() {
+  'use strict';
+
+  // ==========================================
+  //  SEARCH
+  // ==========================================
+  const searchInput = document.getElementById('searchInput');
+  const sections = document.querySelectorAll('.section[data-category]');
+  const noResults = document.getElementById('noResults');
+
+  function performSearch(query) {
+    const q = query.toLowerCase().trim();
+    let anyVisible = false;
+
+    sections.forEach(section => {
+      const cards = section.querySelectorAll('.card, .revenue-row, .timeline-item, .research-card, .infra-card');
+      let sectionHasVisible = false;
+
+      if (!q) {
+        // No search query — show everything based on active filter
+        section.classList.remove('hidden');
+        cards.forEach(c => c.classList.remove('hidden'));
+        anyVisible = true;
+        return;
+      }
+
+      // Check section-level data-search
+      const sectionSearch = section.getAttribute('data-search') || '';
+      const sectionTitle = section.querySelector('.section-title');
+      const sectionText = (sectionSearch + ' ' + (sectionTitle ? sectionTitle.textContent : '')).toLowerCase();
+
+      cards.forEach(card => {
+        const cardSearch = card.getAttribute('data-search') || '';
+        const cardText = (cardSearch + ' ' + card.textContent).toLowerCase();
+        if (cardText.includes(q) || sectionText.includes(q)) {
+          card.classList.remove('hidden');
+          sectionHasVisible = true;
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+
+      // For timeline (deadlines) — if the section itself matches, show it
+      if (section.dataset.category === 'deadlines') {
+        const timelineItems = section.querySelectorAll('.timeline-item');
+        if (timelineItems.length > 0) {
+          let tlVisible = false;
+          timelineItems.forEach(item => {
+            const itemSearch = item.getAttribute('data-search') || '';
+            const itemText = (itemSearch + ' ' + item.textContent).toLowerCase();
+            if (itemText.includes(q)) {
+              item.style.display = '';
+              tlVisible = true;
+            } else {
+              item.style.display = 'none';
+            }
+          });
+          sectionHasVisible = tlVisible;
+        }
+      }
+
+      if (sectionHasVisible) {
+        section.classList.remove('hidden');
+        anyVisible = true;
+      } else {
+        section.classList.add('hidden');
+      }
+    });
+
+    noResults.classList.toggle('visible', !anyVisible && q.length > 0);
+  }
+
+  searchInput.addEventListener('input', function() {
+    // Reset filter to "All" when searching
+    const activeFilter = document.querySelector('.filter-btn.active');
+    if (activeFilter && activeFilter.dataset.filter !== 'all') {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      document.querySelector('.filter-btn[data-filter="all"]').classList.add('active');
+    }
+    performSearch(this.value);
+  });
+
+  // ==========================================
+  //  FILTER BUTTONS
+  // ==========================================
+  const filterBtns = document.querySelectorAll('.filter-btn');
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', function() {
+      filterBtns.forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+
+      const filter = this.dataset.filter;
+      searchInput.value = '';
+      noResults.classList.remove('visible');
+
+      // Reset timeline items
+      document.querySelectorAll('.timeline-item').forEach(item => {
+        item.style.display = '';
+      });
+
+      sections.forEach(section => {
+        const cards = section.querySelectorAll('.card, .revenue-row, .timeline-item, .research-card, .infra-card');
+        cards.forEach(c => c.classList.remove('hidden'));
+
+        if (filter === 'all') {
+          section.classList.remove('hidden');
+        } else if (section.dataset.category === filter) {
+          section.classList.remove('hidden');
+        } else {
+          section.classList.add('hidden');
+        }
+      });
+    });
+  });
+
+  // ==========================================
+  //  ANIMATE BARS ON SCROLL
+  // ==========================================
+  const revenueBars = document.querySelectorAll('.revenue-bar');
+  const progressFills = document.querySelectorAll('.progress-fill');
+
+  function animateBars(entries, observer) {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const bars = entry.target.querySelectorAll('.revenue-bar, .progress-fill');
+        bars.forEach(bar => {
+          const targetWidth = bar.style.width;
+          bar.style.width = '0%';
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              bar.style.width = targetWidth;
+            });
+          });
+        });
+        observer.unobserve(entry.target);
+      }
+    });
+  }
+
+  const barObserver = new IntersectionObserver(animateBars, { threshold: 0.2 });
+
+  document.querySelectorAll('.revenue-grid, .infra-grid').forEach(grid => {
+    barObserver.observe(grid);
+  });
+
+  // ==========================================
+  //  ANIMATE SECTIONS ON SCROLL
+  // ==========================================
+  const animateObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.animationPlayState = 'running';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.animate-in').forEach(el => {
+    animateObserver.observe(el);
+  });
+
+  // ==========================================
+  //  KEYBOARD SHORTCUT
+  // ==========================================
+  document.addEventListener('keydown', function(e) {
+    // CMD+K or CTRL+K to focus search
+    if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+      e.preventDefault();
+      searchInput.focus();
+      searchInput.select();
+    }
+    // Escape to clear search
+    if (e.key === 'Escape') {
+      searchInput.value = '';
+      searchInput.blur();
+      performSearch('');
+    }
+  });
+
+  // ==========================================
+  //  LIVE CLOCK in subtitle
+  // ==========================================
+  function updateClock() {
+    const now = new Date();
+    const options = {
+      timeZone: 'Asia/Jerusalem',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false
+    };
+    const time = now.toLocaleTimeString('en-GB', options);
+    const dateStr = now.toLocaleDateString('en-GB', {
+      timeZone: 'Asia/Jerusalem',
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric'
+    });
+    const subtitle = document.querySelector('.subtitle');
+    if (subtitle) {
+      subtitle.textContent = 'Mission Control \u2014 $63M Hafatsa \u2014 Jerusalem ' + dateStr + ' ' + time;
+    }
+  }
+  updateClock();
+  setInterval(updateClock, 1000);
+
+})();
+</script>
+
+</body>
+</html>

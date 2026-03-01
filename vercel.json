@@ -1,10 +1,8 @@
 {
-  "version": 2,
-  "public": true,
   "outputDirectory": ".",
-  "routes": [
-    { "src": "/dcs", "dest": "/dcs.html" },
-    { "src": "/(.*)", "dest": "/$1" }
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/dcs", "destination": "/dcs.html" }
   ],
   "headers": [
     {

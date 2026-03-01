@@ -772,6 +772,224 @@ body::before {
 
 .no-results.visible { display: block; }
 
+/* === ALL LINKS SECTION === */
+.links-search-wrapper {
+  position: relative;
+  max-width: 500px;
+  margin-bottom: 24px;
+}
+
+.links-search-wrapper svg {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-dim);
+  width: 16px;
+  height: 16px;
+}
+
+.links-search {
+  width: 100%;
+  padding: 10px 16px 10px 40px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 14px;
+  transition: var(--transition);
+  outline: none;
+}
+
+.links-search::placeholder { color: var(--text-dim); }
+.links-search:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px var(--gold-dim);
+}
+
+.links-counter {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-bottom: 20px;
+}
+
+.links-counter strong {
+  color: var(--gold);
+}
+
+.link-category {
+  margin-bottom: 28px;
+}
+
+.link-category-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.link-category-icon {
+  font-size: 18px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.link-category-icon.gold-bg { background: var(--gold-dim); }
+.link-category-icon.cyan-bg { background: var(--cyan-dim); }
+.link-category-icon.green-bg { background: rgba(0, 230, 118, 0.12); }
+.link-category-icon.orange-bg { background: rgba(255, 145, 0, 0.12); }
+.link-category-icon.purple-bg { background: rgba(179, 136, 255, 0.12); }
+.link-category-icon.blue-bg { background: rgba(68, 138, 255, 0.12); }
+.link-category-icon.red-bg { background: rgba(255, 61, 61, 0.12); }
+
+.link-category-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.link-category-count {
+  font-size: 11px;
+  color: var(--text-dim);
+  background: var(--bg-card);
+  padding: 2px 10px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  font-weight: 500;
+}
+
+.link-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 10px;
+}
+
+.link-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 16px;
+  transition: var(--transition);
+  text-decoration: none;
+  color: inherit;
+  position: relative;
+  overflow: hidden;
+}
+
+.link-item::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: var(--gold);
+  opacity: 0;
+  transition: var(--transition);
+}
+
+.link-item:hover {
+  border-color: var(--border-gold);
+  transform: translateX(4px);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+.link-item:hover::before { opacity: 1; }
+
+.link-item.hidden { display: none; }
+
+.link-item-number {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--bg);
+  background: var(--gold);
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.link-item-number.cyan { background: var(--cyan); }
+.link-item-number.green { background: var(--green); }
+.link-item-number.orange { background: var(--orange); }
+.link-item-number.purple { background: var(--purple); }
+.link-item-number.blue { background: var(--blue); }
+.link-item-number.red { background: var(--red); }
+
+.link-item-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.link-item-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.link-item-url {
+  font-size: 11px;
+  color: var(--cyan);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  opacity: 0.8;
+}
+
+.link-item-url.local {
+  color: var(--orange);
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 10px;
+}
+
+.link-item-badge {
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.link-item-badge.live { background: rgba(0,230,118,0.12); color: var(--green); }
+.link-item-badge.private { background: rgba(255,61,61,0.12); color: var(--red); }
+.link-item-badge.repo { background: rgba(179,136,255,0.12); color: var(--purple); }
+.link-item-badge.local-badge { background: rgba(255,145,0,0.12); color: var(--orange); }
+.link-item-badge.page { background: rgba(0,212,255,0.12); color: var(--cyan); }
+.link-item-badge.conf { background: rgba(255,61,61,0.15); color: var(--red); }
+
+.link-item-arrow {
+  color: var(--text-dim);
+  flex-shrink: 0;
+  transition: var(--transition);
+}
+
+.link-item:hover .link-item-arrow { color: var(--gold); transform: translateX(3px); }
+
+.link-category.hidden-cat { display: none; }
+
+@media (max-width: 768px) {
+  .link-list { grid-template-columns: 1fr; }
+}
+
 /* === RESPONSIVE === */
 @media (max-width: 1024px) {
   .stats-bar { grid-template-columns: repeat(3, 1fr); }
@@ -839,6 +1057,7 @@ body::before {
       <button class="filter-btn" data-filter="deadlines">Deadlines</button>
       <button class="filter-btn" data-filter="research">Research</button>
       <button class="filter-btn" data-filter="infra">Infrastructure</button>
+      <button class="filter-btn" data-filter="links" style="background:linear-gradient(135deg,rgba(212,175,55,0.08),rgba(0,212,255,0.05));border-color:var(--gold-dim)">All Links</button>
       <a href="dcs.html" class="filter-btn" style="background:linear-gradient(135deg,var(--gold-dim),var(--cyan-dim));border-color:var(--gold);text-decoration:none">DCS 72.5</a>
     </div>
   </header>
@@ -854,7 +1073,7 @@ body::before {
       <div class="stat-label">Vercel Projects</div>
     </div>
     <div class="stat-card animate-in" style="animation-delay: 0.15s">
-      <div class="stat-number">11</div>
+      <div class="stat-number">13</div>
       <div class="stat-label">Live Sites</div>
     </div>
     <div class="stat-card animate-in" style="animation-delay: 0.2s">
@@ -878,7 +1097,7 @@ body::before {
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
       </div>
       <h2 class="section-title">Live Sites</h2>
-      <span class="section-count">11 sites</span>
+      <span class="section-count">13 sites</span>
     </div>
     <div class="card-grid" id="sitesGrid">
 
@@ -1012,6 +1231,30 @@ body::before {
         </div>
         <span class="tag green">Lead Gen</span>
         <a class="card-url" href="https://ariel-solar-panels-kavkom.vercel.app" target="_blank" rel="noopener">ariel-solar-panels-kavkom.vercel.app</a>
+      </div>
+
+      <div class="card" data-search="dashboard command center github pages">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Command Dashboard</div>
+            <div class="card-subtitle">GitHub Pages Command Center</div>
+          </div>
+          <div class="status up"><span class="status-dot"></span>UP</div>
+        </div>
+        <span class="tag cyan">Dashboard</span>
+        <a class="card-url" href="https://codenolimits.github.io/dreamnova-command-dashboard/" target="_blank" rel="noopener">codenolimits.github.io/dreamnova-command-dashboard</a>
+      </div>
+
+      <div class="card" data-search="wa hub whatsapp campaigns messages">
+        <div class="card-header">
+          <div>
+            <div class="card-title">WA Hub Campaigns</div>
+            <div class="card-subtitle">WhatsApp Campaign Manager</div>
+          </div>
+          <div class="status up"><span class="status-dot"></span>UP</div>
+        </div>
+        <span class="tag green">Campaigns</span>
+        <a class="card-url" href="https://codenolimits.github.io/dreamnova-wa-hub/" target="_blank" rel="noopener">codenolimits.github.io/dreamnova-wa-hub</a>
       </div>
 
     </div>
@@ -1454,6 +1697,378 @@ body::before {
     </div>
   </section>
 
+  <!-- SECTION: ALL LINKS -->
+  <section class="section animate-in" data-category="links" style="animation-delay: 0.7s">
+    <div class="section-header">
+      <div class="section-icon gold">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+      </div>
+      <h2 class="section-title">ALL LINKS</h2>
+      <span class="section-count" id="linksTotal">34 links</span>
+    </div>
+
+    <!-- Links filter/search -->
+    <div class="links-search-wrapper">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" class="links-search" id="linksSearch" placeholder="Filter links... (sites, repos, files, pages)">
+    </div>
+    <div class="links-counter" id="linksCounter">Showing <strong>34</strong> of 34 links</div>
+
+    <!-- SITES LIVE (13) -->
+    <div class="link-category" data-linkcat="sites-live">
+      <div class="link-category-header">
+        <div class="link-category-icon gold-bg">&#127760;</div>
+        <div class="link-category-title">Sites Live</div>
+        <span class="link-category-count">13 sites</span>
+      </div>
+      <div class="link-list">
+        <a href="https://dreamnova.vercel.app" target="_blank" rel="noopener" class="link-item" data-linksearch="dreamnova landing main nfc sacred platform">
+          <div class="link-item-number">1</div>
+          <div class="link-item-content">
+            <div class="link-item-name">DreamNova Landing</div>
+            <div class="link-item-url">dreamnova.vercel.app</div>
+          </div>
+          <span class="link-item-badge live">LIVE</span>
+          <span class="link-item-arrow">&#8594;</span>
+        </a>
+        <a href="https://haesh-sheli-new.vercel.app" target="_blank" rel="noopener" class="link-item" data-linksearch="keren haesh sheli books breslev yaakov renne">
+          <div class="link-item-number">2</div>
+          <div class="link-item-content">
+            <div class="link-item-name">Keren HaEsh Sheli</div>
+            <div class="link-item-url">haesh-sheli-new.vercel.app</div>
+          </div>
+          <span class="link-item-badge live">LIVE</span>
+          <span class="link-item-arrow">&#8594;</span>
+        </a>
+        <a href="https://ultime-esther-ifra-breslev.vercel.app" target="_blank" rel="noopener" class="link-item" data-linksearch="esther ifrah breslev content platform">
+          <div class="link-item-number">3</div>
+          <div class="link-item-content">
+            <div class="link-item-name">Esther Ifrah Breslev</div>
+            <div class="link-item-url">ultime-esther-ifra-breslev.vercel.app</div>
+          </div>
+          <span class="link-item-badge live">LIVE</span>
+          <span class="link-item-arrow">&#8594;</span>
+        </a>
+        <a href="https://barukh-sagit-jewelry.vercel.app" target="_blank" rel="noopener" class="link-item" data-linksearch="baroukh sagit jewelry bijoux luxury 341 products">
+          <div class="link-item-number">4</div>
+          <div class="link-item-content">
+            <div class="link-item-name">Baroukh Sagit Jewelry</div>
+            <div class="link-item-url">barukh-sagit-jewelry.vercel.app</div>
+          </div>
+          <span class="link-item-badge live">LIVE</span>
+          <span class="link-item-arrow">&#8594;</span>
+        </a>
+        <a href="https://dreamnova-consult.vercel.app" target="_blank" rel="noopener" class="link-item" data-linksearch="dreamnova consult consulting ai services">
+          <div class="link-item-number">5</div>
+          <div class="link-item-content">
+            <div class="link-item-name">DreamNova Consult</div>
+            <div class="link-item-url">dreamnova-consult.vercel.app</div>
+          </div>
+          <span class="link-item-badge live">LIVE</span>
+          <span class="link-item-arrow">&#8594;</span>
+        </a>
+        <a href="https://nachman-science.vercel.app" target="_blank" rel="noopener" class="link-item" data-linksearch="nachman science entropy research shannon sacred texts">
+          <div class="link-item-number">6</div>
+          <div class="link-item-content">
+            <div class="link-item-name">Nachman Science</div>
+            <div class="link-item-url">nachman-science.vercel.app</div>
+          </div>
+          <span class="link-item-badge live">LIVE</span>
+          <span class="link-item-arrow">&#8594;</span>
+        </a>
+        <a href="https://dreamnova-portfolio.vercel.app" target="_blank" rel="noopener" class="link-item" data-linksearch="dreamnova portfolio showcase projects">
+          <div class="link-item-number">7</div>
+          <div class="link-item-content">
+            <div class="link-item-name">DreamNova Portfolio</div>
+            <div class="link-item-url">dreamnova-portfolio.vercel.app</div>
+          </div>
+          <span class="link-item-badge live">LIVE</span>
+          <span class="link-item-arrow">&#8594;</span>
+        </a>
+        <a href="https://dreamnova-formation-ia.vercel.app" target="_blank" rel="noopener" class="link-item" data-linksearch="dreamnova formation ia ai training education">
+          <div class="link-item-number">8</div>
+          <div class="link-item-content">
+            <div class="link-item-name">DreamNova Formation IA</div>
+            <div class="link-item-url">dreamnova-formation-ia.vercel.app</div>
+          </div>
+          <span class="link-item-badge live">LIVE</span>
+          <span class="link-item-arrow">&#8594;</span>
+        </a>
+        <a href="https://dreamnova-project-map.vercel.app" target="_blank" rel="noopener" class="link-item" data-linksearch="project map 84 projets vercel explorer carte">
+          <div class="link-item-number">9</div>
+          <div class="link-item-content">
+            <div class="link-item-name">Project Map (84 projets)</div>
+            <div class="link-item-url">dreamnova-project-map.vercel.app</div>
+          </div>
+          <span class="link-item-badge live">LIVE</span>
+          <span class="link-item-arrow">&#8594;</span>
+        </a>
+        <a href="https://dreamnova-status-hub.vercel.app" target="_blank" rel="noopener" class="link-item" data-linksearch="status hub ecosystem monitoring health">
+          <div class="link-item-number">10</div>
+          <div class="link-item-content">
+            <div class="link-item-name">Status Hub</div>
+            <div class="link-item-url">dreamnova-status-hub.vercel.app</div>
+          </div>
+          <span class="link-item-badge live">LIVE</span>
+          <span class="link-item-arrow">&#8594;</span>
+        </a>
+        <a href="https://ariel-solar-panels-kavkom.vercel.app" target="_blank" rel="noopener" class="link-item" data-linksearch="ariel solar panels lead gen kavkom ti48">
+          <div class="link-item-number">11</div>
+          <div class="link-item-content">
+            <div class="link-item-name">Ariel Solar Panels</div>
+            <div class="link-item-url">ariel-solar-panels-kavkom.vercel.app</div>
+          </div>
+          <span class="link-item-badge live">LIVE</span>
+          <span class="link-item-arrow">&#8594;</span>
+        </a>
+        <a href="https://codenolimits.github.io/dreamnova-command-dashboard/" target="_blank" rel="noopener" class="link-item" data-linksearch="dashboard command center github pages control">
+          <div class="link-item-number">12</div>
+          <div class="link-item-content">
+            <div class="link-item-name">Dashboard Command Center</div>
+            <div class="link-item-url">codenolimits.github.io/dreamnova-command-dashboard</div>
+          </div>
+          <span class="link-item-badge live">LIVE</span>
+          <span class="link-item-arrow">&#8594;</span>
+        </a>
+        <a href="https://codenolimits.github.io/dreamnova-wa-hub/" target="_blank" rel="noopener" class="link-item" data-linksearch="wa hub whatsapp campaigns messages contacts">
+          <div class="link-item-number">13</div>
+          <div class="link-item-content">
+            <div class="link-item-name">WA Hub Campaigns</div>
+            <div class="link-item-url">codenolimits.github.io/dreamnova-wa-hub</div>
+          </div>
+          <span class="link-item-badge live">LIVE</span>
+          <span class="link-item-arrow">&#8594;</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- INVESTISSEURS (CONFIDENTIEL) -->
+    <div class="link-category" data-linkcat="investors">
+      <div class="link-category-header">
+        <div class="link-category-icon red-bg">&#128274;</div>
+        <div class="link-category-title">Investisseurs (CONFIDENTIEL)</div>
+        <span class="link-category-count">2 links</span>
+      </div>
+      <div class="link-list">
+        <a href="https://dreamnova-investor-brief.vercel.app" target="_blank" rel="noopener" class="link-item" data-linksearch="investor brief berrebi investisseur confidentiel pitch">
+          <div class="link-item-number red">1</div>
+          <div class="link-item-content">
+            <div class="link-item-name">Investor Brief Berrebi</div>
+            <div class="link-item-url">dreamnova-investor-brief.vercel.app</div>
+          </div>
+          <span class="link-item-badge conf">CONFID.</span>
+          <span class="link-item-arrow">&#8594;</span>
+        </a>
+        <a href="https://github.com/CodeNoLimits/dreamnova-investor-brief" target="_blank" rel="noopener" class="link-item" data-linksearch="investor brief github private repo confidentiel">
+          <div class="link-item-number red">2</div>
+          <div class="link-item-content">
+            <div class="link-item-name">GitHub: dreamnova-investor-brief</div>
+            <div class="link-item-url">github.com/CodeNoLimits/dreamnova-investor-brief</div>
+          </div>
+          <span class="link-item-badge private">PRIVATE</span>
+          <span class="link-item-arrow">&#8594;</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- GITHUB REPOS PRINCIPAUX -->
+    <div class="link-category" data-linkcat="github">
+      <div class="link-category-header">
+        <div class="link-category-icon purple-bg">&#128187;</div>
+        <div class="link-category-title">GitHub Repos Principaux</div>
+        <span class="link-category-count">10 repos</span>
+      </div>
+      <div class="link-list">
+        <a href="https://github.com/CodeNoLimits/dreamnova-command-dashboard" target="_blank" rel="noopener" class="link-item" data-linksearch="dreamnova command dashboard github repo">
+          <div class="link-item-number purple">1</div>
+          <div class="link-item-content">
+            <div class="link-item-name">dreamnova-command-dashboard</div>
+            <div class="link-item-url">github.com/CodeNoLimits/dreamnova-command-dashboard</div>
+          </div>
+          <span class="link-item-badge repo">REPO</span>
+          <span class="link-item-arrow">&#8594;</span>
+        </a>
+        <a href="https://github.com/CodeNoLimits/dreamnova-status-hub" target="_blank" rel="noopener" class="link-item" data-linksearch="dreamnova status hub github repo monitoring">
+          <div class="link-item-number purple">2</div>
+          <div class="link-item-content">
+            <div class="link-item-name">dreamnova-status-hub</div>
+            <div class="link-item-url">github.com/CodeNoLimits/dreamnova-status-hub</div>
+          </div>
+          <span class="link-item-badge repo">REPO</span>
+          <span class="link-item-arrow">&#8594;</span>
+        </a>
+        <a href="https://github.com/CodeNoLimits/dreamnova-portfolio" target="_blank" rel="noopener" class="link-item" data-linksearch="dreamnova portfolio github repo showcase">
+          <div class="link-item-number purple">3</div>
+          <div class="link-item-content">
+            <div class="link-item-name">dreamnova-portfolio</div>
+            <div class="link-item-url">github.com/CodeNoLimits/dreamnova-portfolio</div>
+          </div>
+          <span class="link-item-badge repo">REPO</span>
+          <span class="link-item-arrow">&#8594;</span>
+        </a>
+        <a href="https://github.com/CodeNoLimits/keren-rabbi-israel-centralized" target="_blank" rel="noopener" class="link-item" data-linksearch="keren rabbi israel centralized github repo breslev books">
+          <div class="link-item-number purple">4</div>
+          <div class="link-item-content">
+            <div class="link-item-name">keren-rabbi-israel-centralized</div>
+            <div class="link-item-url">github.com/CodeNoLimits/keren-rabbi-israel-centralized</div>
+          </div>
+          <span class="link-item-badge repo">REPO</span>
+          <span class="link-item-arrow">&#8594;</span>
+        </a>
+        <a href="https://github.com/CodeNoLimits/nachman-science" target="_blank" rel="noopener" class="link-item" data-linksearch="nachman science github repo research entropy">
+          <div class="link-item-number purple">5</div>
+          <div class="link-item-content">
+            <div class="link-item-name">nachman-science</div>
+            <div class="link-item-url">github.com/CodeNoLimits/nachman-science</div>
+          </div>
+          <span class="link-item-badge repo">REPO</span>
+          <span class="link-item-arrow">&#8594;</span>
+        </a>
+        <a href="https://github.com/CodeNoLimits/dreamnova-brain" target="_blank" rel="noopener" class="link-item" data-linksearch="dreamnova brain github repo master brain context">
+          <div class="link-item-number purple">6</div>
+          <div class="link-item-content">
+            <div class="link-item-name">dreamnova-brain</div>
+            <div class="link-item-url">github.com/CodeNoLimits/dreamnova-brain</div>
+          </div>
+          <span class="link-item-badge repo">REPO</span>
+          <span class="link-item-arrow">&#8594;</span>
+        </a>
+        <a href="https://github.com/CodeNoLimits/dreamnova-wa-hub" target="_blank" rel="noopener" class="link-item" data-linksearch="dreamnova wa hub github repo whatsapp campaigns">
+          <div class="link-item-number purple">7</div>
+          <div class="link-item-content">
+            <div class="link-item-name">dreamnova-wa-hub</div>
+            <div class="link-item-url">github.com/CodeNoLimits/dreamnova-wa-hub</div>
+          </div>
+          <span class="link-item-badge repo">REPO</span>
+          <span class="link-item-arrow">&#8594;</span>
+        </a>
+        <a href="https://github.com/CodeNoLimits/grok-architect" target="_blank" rel="noopener" class="link-item" data-linksearch="grok architect github repo ai copilot instructions">
+          <div class="link-item-number purple">8</div>
+          <div class="link-item-content">
+            <div class="link-item-name">grok-architect</div>
+            <div class="link-item-url">github.com/CodeNoLimits/grok-architect</div>
+          </div>
+          <span class="link-item-badge repo">REPO</span>
+          <span class="link-item-arrow">&#8594;</span>
+        </a>
+        <a href="https://github.com/CodeNoLimits/dreamnova-investor-brief" target="_blank" rel="noopener" class="link-item" data-linksearch="dreamnova investor brief github repo private confidentiel">
+          <div class="link-item-number red">9</div>
+          <div class="link-item-content">
+            <div class="link-item-name">dreamnova-investor-brief</div>
+            <div class="link-item-url">github.com/CodeNoLimits/dreamnova-investor-brief</div>
+          </div>
+          <span class="link-item-badge private">PRIVATE</span>
+          <span class="link-item-arrow">&#8594;</span>
+        </a>
+        <a href="https://github.com/CodeNoLimits?tab=repositories" target="_blank" rel="noopener" class="link-item" data-linksearch="all repos github repositories codenolimits 143 total">
+          <div class="link-item-number">10</div>
+          <div class="link-item-content">
+            <div class="link-item-name">All Repos (143 total)</div>
+            <div class="link-item-url">github.com/CodeNoLimits?tab=repositories</div>
+          </div>
+          <span class="link-item-badge repo">ALL</span>
+          <span class="link-item-arrow">&#8594;</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- OUTILS & FICHIERS LOCAUX -->
+    <div class="link-category" data-linkcat="local-files">
+      <div class="link-category-header">
+        <div class="link-category-icon orange-bg">&#128193;</div>
+        <div class="link-category-title">Outils &amp; Fichiers Locaux</div>
+        <span class="link-category-count">8 fichiers</span>
+      </div>
+      <div class="link-list">
+        <div class="link-item" data-linksearch="session trace session log mac m4 max command center">
+          <div class="link-item-number orange">1</div>
+          <div class="link-item-content">
+            <div class="link-item-name">Session Trace</div>
+            <div class="link-item-url local">~/Desktop/Mac M4 Max/00_COMMAND_CENTER/SESSION_TRACE_20260301.md</div>
+          </div>
+          <span class="link-item-badge local-badge">LOCAL</span>
+        </div>
+        <div class="link-item" data-linksearch="secrets registry master secrets credentials tokens api keys">
+          <div class="link-item-number orange">2</div>
+          <div class="link-item-content">
+            <div class="link-item-name">Secrets Registry</div>
+            <div class="link-item-url local">~/Desktop/CLAUDE_CODE_BRIDGE/MASTER_SECRETS_REGISTRY.md</div>
+          </div>
+          <span class="link-item-badge local-badge">LOCAL</span>
+        </div>
+        <div class="link-item" data-linksearch="accounts registry stripe vercel supabase github comptes">
+          <div class="link-item-number orange">3</div>
+          <div class="link-item-content">
+            <div class="link-item-name">Accounts Registry</div>
+            <div class="link-item-url local">~/Desktop/CLAUDE_CODE_BRIDGE/ACCOUNTS_REGISTRY.md</div>
+          </div>
+          <span class="link-item-badge local-badge">LOCAL</span>
+        </div>
+        <div class="link-item" data-linksearch="dcs score dream consistency score psychologie david assessment">
+          <div class="link-item-number orange">4</div>
+          <div class="link-item-content">
+            <div class="link-item-name">DCS Score</div>
+            <div class="link-item-url local">~/Desktop/Mac M4 Max/00_COMMAND_CENTER/DREAM_CONSISTENCY_SCORE.md</div>
+          </div>
+          <span class="link-item-badge local-badge">LOCAL</span>
+        </div>
+        <div class="link-item" data-linksearch="billion strategy milliard dollar hafatsa engines revenue plan">
+          <div class="link-item-number orange">5</div>
+          <div class="link-item-content">
+            <div class="link-item-name">Billion Dollar Strategy</div>
+            <div class="link-item-url local">~/Desktop/Mac M4 Max/04_REVENUE_CASH/BILLION_DOLLAR_STRATEGY.md</div>
+          </div>
+          <span class="link-item-badge local-badge">LOCAL</span>
+        </div>
+        <div class="link-item" data-linksearch="revenue activation 30 days plan argent cash monthly target">
+          <div class="link-item-number orange">6</div>
+          <div class="link-item-content">
+            <div class="link-item-name">Revenue Plan 30 Days</div>
+            <div class="link-item-url local">~/Desktop/Mac M4 Max/04_REVENUE_CASH/REVENUE_ACTIVATION_30_DAYS.md</div>
+          </div>
+          <span class="link-item-badge local-badge">LOCAL</span>
+        </div>
+        <div class="link-item" data-linksearch="financial monitor python automation script monitoring argent">
+          <div class="link-item-number orange">7</div>
+          <div class="link-item-content">
+            <div class="link-item-name">Financial Monitor</div>
+            <div class="link-item-url local">~/Desktop/Mac M4 Max/06_AUTOMATION/financial_monitor.py</div>
+          </div>
+          <span class="link-item-badge local-badge">LOCAL</span>
+        </div>
+        <div class="link-item" data-linksearch="dcs 10 strategy plan amelioration score objectives">
+          <div class="link-item-number orange">8</div>
+          <div class="link-item-content">
+            <div class="link-item-name">DCS 10/10 Strategy</div>
+            <div class="link-item-url local">~/Desktop/Mac M4 Max/04_REVENUE_CASH/DCS_10_STRATEGY.md</div>
+          </div>
+          <span class="link-item-badge local-badge">LOCAL</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGES DU DASHBOARD -->
+    <div class="link-category" data-linkcat="dashboard-pages">
+      <div class="link-category-header">
+        <div class="link-category-icon cyan-bg">&#128196;</div>
+        <div class="link-category-title">Pages du Dashboard</div>
+        <span class="link-category-count">1 page</span>
+      </div>
+      <div class="link-list">
+        <a href="./dcs.html" class="link-item" data-linksearch="dcs page dream consistency score radar chart assessment david">
+          <div class="link-item-number cyan">1</div>
+          <div class="link-item-content">
+            <div class="link-item-name">DCS Score Page</div>
+            <div class="link-item-url">./dcs.html &mdash; Radar chart + 90-day plan</div>
+          </div>
+          <span class="link-item-badge page">PAGE</span>
+          <span class="link-item-arrow">&#8594;</span>
+        </a>
+      </div>
+    </div>
+
+  </section>
+
   <!-- NO RESULTS -->
   <div class="no-results" id="noResults">
     No results found. Try a different search term.
@@ -1584,6 +2199,61 @@ body::before {
       });
     });
   });
+
+  // ==========================================
+  //  ALL LINKS SECTION FILTER
+  // ==========================================
+  const linksSearch = document.getElementById('linksSearch');
+  const linksCounter = document.getElementById('linksCounter');
+  const linksTotal = document.getElementById('linksTotal');
+  const allLinkItems = document.querySelectorAll('.link-item[data-linksearch]');
+  const linkCategories = document.querySelectorAll('.link-category');
+  const totalLinks = allLinkItems.length;
+
+  if (linksTotal) linksTotal.textContent = totalLinks + ' links';
+
+  function filterLinks(query) {
+    const q = query.toLowerCase().trim();
+    let visible = 0;
+
+    linkCategories.forEach(cat => {
+      const items = cat.querySelectorAll('.link-item[data-linksearch]');
+      let catVisible = 0;
+
+      items.forEach(item => {
+        if (!q) {
+          item.classList.remove('hidden');
+          catVisible++;
+          visible++;
+          return;
+        }
+        const searchText = (item.getAttribute('data-linksearch') || '') + ' ' + item.textContent;
+        if (searchText.toLowerCase().includes(q)) {
+          item.classList.remove('hidden');
+          catVisible++;
+          visible++;
+        } else {
+          item.classList.add('hidden');
+        }
+      });
+
+      if (catVisible === 0 && q) {
+        cat.classList.add('hidden-cat');
+      } else {
+        cat.classList.remove('hidden-cat');
+      }
+    });
+
+    if (linksCounter) {
+      linksCounter.innerHTML = 'Showing <strong>' + visible + '</strong> of ' + totalLinks + ' links';
+    }
+  }
+
+  if (linksSearch) {
+    linksSearch.addEventListener('input', function() {
+      filterLinks(this.value);
+    });
+  }
 
   // ==========================================
   //  ANIMATE BARS ON SCROLL
